@@ -1,0 +1,4 @@
+res://default_env.tres
+res://Lobby/Lobby.tscn
+res://world/world.tscn
+res://world/world.gd

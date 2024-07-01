@@ -1,0 +1,91 @@
+[gd_scene load_steps=11 format=3 uid="uid://0kbapnptpmyf"]
+
+[ext_resource type="Texture2D" uid="uid://d4ln0bc0ghvtk" path="res://Assets/background.png" id="3"]
+[ext_resource type="PackedScene" path="res://player/Player.tscn" id="4"]
+[ext_resource type="Script" path="res://player/Player.gd" id="5"]
+[ext_resource type="PackedScene" path="res://Ball/Ball.tscn" id="6"]
+[ext_resource type="Script" path="res://Ball/Ball.gd" id="7"]
+[ext_resource type="Script" path="res://world/world.gd" id="8"]
+[ext_resource type="FontFile" uid="uid://cwumt7li6l830" path="res://Assets/Xolonium-Bold.ttf" id="9"]
+
+[sub_resource type="FontFile" id="4"]
+fallbacks = Array[Font]([ExtResource("9")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+
+[sub_resource type="RectangleShape2D" id="1"]
+size = Vector2(1280, 20)
+
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(720, 20)
+
+[node name="world" type="Node"]
+script = ExtResource("8")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+texture = ExtResource("3")
+
+[node name="StartLabel" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -70.0
+theme_override_fonts/font = SubResource("4")
+text = "Press space to Start"
+
+[node name="PlayerLeft" parent="." instance=ExtResource("4")]
+position = Vector2(51, 360)
+collision_layer = 2
+script = ExtResource("5")
+paddle_position = 0
+
+[node name="PlayerRight" parent="." instance=ExtResource("4")]
+position = Vector2(1241, 362)
+script = ExtResource("5")
+paddle_position = 1
+
+[node name="Ball" parent="." instance=ExtResource("6")]
+position = Vector2(640, 360)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("7")
+
+[node name="TopWall" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopWall"]
+position = Vector2(640, 0)
+shape = SubResource("1")
+
+[node name="DownWall" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DownWall"]
+position = Vector2(640, 731)
+shape = SubResource("1")
+
+[node name="LeftWall" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
+position = Vector2(0, 360)
+rotation = 1.5708
+shape = SubResource("2")
+
+[node name="RightWall" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
+position = Vector2(1291, 360)
+rotation = 1.5708
+shape = SubResource("2")
+
+[connection signal="body_entered" from="LeftWall" to="." method="_on_LeftWall_body_entered"]
+[connection signal="body_entered" from="RightWall" to="." method="_on_RightWall_body_entered"]
